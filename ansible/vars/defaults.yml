@@ -1,0 +1,12 @@
+## webapp
+
+webserver_name: testapp-serv
+deploy_directory: /data/testapp
+app_name: testapp
+
+
+rubyTmpDir: /usr/local/src
+rubyUrl: http://cache.ruby-lang.org/pub/ruby/2.4/ruby-2.4.0.tar.gz
+rubyCompressedFile: ruby-2.4.0.tar.gz
+rubyName: ruby-2.4.0
+tmpRubyPath: "{{rubyTmpDir}}/{{rubyName}}"
