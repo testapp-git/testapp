@@ -11,7 +11,7 @@
   command: rm -rf /etc/nginx/sites-enabled/{{app_name}}
 
 - name: Configure nginx for the app
-  template: src=etc_nginx_sites-available_template.conf.j2 dest=/etc/nginx/sites-available/{{app_name}} group=www-data owner=www-data force=yes
+  template: src=etc_nginx_sites-available.conf.j2 dest=/etc/nginx/sites-available/{{app_name}} group=www-data owner=www-data force=yes
 
 - name: Enable the app
   command: ln -s /etc/nginx/sites-available/{{app_name}} /etc/nginx/sites-enabled/{{app_name}}
@@ -19,3 +19,23 @@
 - name: Restart nginx
   action: service name=nginx state=restarted
 
+- name: Add puma start script
+  template: src=puma_start.sh dest=/{{deploy_directory}}
+
+- name: Add puma stop script
+  template: src=puma_stop.sh dest=/{{deploy_directory}}
+
+- name: Make sript puma_start executable
+  file: dest=/{{deploy_directory}}/puma_start.sh mode=a+x
+
+- name: Make sript puma_stop executable
+  file: dest=/{{deploy_directory}}/puma_stop.sh mode=a+x
+
+- name: Start puma
+  shell: sh /data/testapp/puma_start.sh
+
+- name: Add puma to autostart
+  shell: awk '(NR==13){print "{{deploy_directory}}/puma_start.sh &"} {print}' /etc/rc.local > /tmp/rc.local.bkp; mv /tmp/rc.local.bkp /etc/rc.local
+
+- name: Make rc.local executable
+  file: dest=/etc/rc.local mode=a+x

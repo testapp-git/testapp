@@ -54,3 +54,7 @@
 
 - name: Install Bundler
   command: gem install bundler
+
+- bundler: install gems
+    state: present
+    gemfile: {{deploy_directory}}/current/Gemfile
